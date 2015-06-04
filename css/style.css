@@ -8,15 +8,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-  background: url(../img/Pig_trans.png);
-  background-size: 50%;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  height: 100%;
+  background: url("../img/bg.jpg") no-repeat;
+  background-size: cover;
+  font-family: 'Play', sans-serif;
+  color: rgba(104,178,248, .8);
+}
+
+.container {
+  -webkit-transform: perspective(15px) rotateX(1deg);
+}
+
+.well {
+  border: 5px solid rgba(101,31,113, .8);
+  background-color: rgba(20,0,105,.6);
 }
 
 html {
   height: 100%;
+}
+
+.container {
+  width: 75%;
 }
 
 .dice {
@@ -67,9 +79,13 @@ div#playerNames {
 
 div#whoseTurn {
   font-weight: bold;
-  font-size: 3em;
+  font-size: 4.5em;
   text-align: center;
-  color: darkgreen;
+  color: rgba(255,59,88, 1);
+}
+
+.holdButton {
+  width: 100%;
 }
 
 div.disablePlayer {
@@ -77,16 +93,17 @@ div.disablePlayer {
   background-color: rgba(0,0,0,0.7);
 }
 
-/*.hold {
-  text-align: center;
-  margin: auto;
-}*/
+.btn-primary {
+  background-color: rgba(80,110,229, .8);
+}
+
+.btn-primary:hover {
+  background-color: rgba(80,110,229, 1);
+}
 
 .turn {
-  border-style: dotted;
-  border-width: 3px;
-  border-color: silver;
-  border-radius: 4px;
+  border-top: 3px solid rgba(255,59,88, 1);
+  border-bottom: 3px solid rgba(255,59,88, 1);
   margin: 8px;
   text-align: center;
 }
@@ -99,4 +116,44 @@ div.disablePlayer {
 
 .container {
   margin-top: 10px;
+}
+
+.pig-wrapper {
+  position: fixed;
+  bottom: -111px;
+  right: 607px;
+  height: 127px;
+  width: 111px;
+  z-index: -234;
+}
+
+.pig-wrapper img {
+  position: absolute;
+}
+
+#pig-helmet {
+  position: absolute;
+  top: 7px;
+  left: -13px;
+  height: 61px;
+  width: 92px;
+  background-color: rgba(255,255,255, .6);
+  border-radius: 48px;
+  z-index: 2;
+}
+
+.pig-wrapper {
+  position: fixed;
+  bottom: -111px;
+  right: 607px;
+  height: 127px;
+  width: 111px;
+  z-index: -234;
+  animation: example 5s infinite;
+  animation-direction: alternate;
+}
+
+@keyframes example {
+  from {transform: scale(.5, .5)}
+  to {transform: scale(2.5, 2.5)}
 }

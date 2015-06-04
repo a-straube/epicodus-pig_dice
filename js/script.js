@@ -1,5 +1,6 @@
 var player1 = new Player("Player1");
 var player2 = new Player("Player2");
+var playComputer = false;
 
 function Player(name) {
   this.name = name;
@@ -10,16 +11,19 @@ Player.prototype.increaseScore = function(amount) {
   this.score += amount;
 }
 
+function getRandomPlayer(playerOne, playerTwo) {
+  var players = [playerOne, playerTwo];
+  return players[Math.round(Math.random())];
+};
+
 var rollDice = function() {
   return Math.floor((Math.random() * 6) + 1);
 };
-
 
 var foo = function(bar) {
   "use strict";
   return false;
 };
-
 
 var dotDice = function(number, jqDiceDiv) {
   jqDiceDiv.empty();
@@ -70,7 +74,7 @@ addDot = function(x, y, dice) {
 }
 
 //switch turns
-whoseTurn = function(player) {
+switchPlayer = function(player) {
   $("div#whoseTurn").text(player.name.toUpperCase() + "'S TURN!");
 
   if (player1.name === player.name) {
@@ -113,6 +117,15 @@ winner = function(player) {
 $( document ).ready(function() {
   "use strict";
 
+  function rollIfBot() {
+    // determine if bot
+    if (playComputer) {
+      rollAndScore();
+      debugger;
+      switchPlayer(player1);
+    }
+  }
+
   // show player names form to start new game
   $("div#modalOverlay").show();
 
@@ -130,10 +143,14 @@ $( document ).ready(function() {
 
   // handles clicking on the dice to roll and update scores
   $("div.dice").click(function() {
+    rollAndScore();
+  });
+
+  function rollAndScore() {
     var rollResult = rollDice();
 
     var currentPlayerScore;
-    if (this.id === "player1dice") {
+    if ($("div.dice").attr('id') === "player1dice") {
       currentPlayerScore = $("span#player1turnScore");
     } else {
       currentPlayerScore = $("span#player2turnScore");
@@ -144,21 +161,22 @@ $( document ).ready(function() {
       if (currentPlayerScore.attr("id") === "player1turnScore") {
         console.log("player 2's turn now");
         // player 1 hit 0
-        whoseTurn(player2);
+        switchPlayer(player2);
       } else {
         console.log("player 2's turn now");
-        whoseTurn(player1);
+        switchPlayer(player1);
       }
 
     } else {
       currentPlayerScore.text(parseInt(currentPlayerScore.text()) + rollResult);
     }
 
-    dotDice(rollResult, $(this));
-  });
+    dotDice(rollResult, $("div.dice"));
+  }
 
   //handles clicking play on new game modal form
   $("form#newGame").submit(function(event) {
+    alert("form submitted");
     event.preventDefault();
     // get names from form
     player1 = new Player($("input#player1").val());
@@ -168,16 +186,31 @@ $( document ).ready(function() {
     $("span#player2name").text(player2.name);
     // dismiss overlay
     $("div#modalOverlay").hide();
-    whoseTurn(player1);
+    switchPlayer(getRandomPlayer(player1, player2));
+  });
+
+  $("span#play-computer").click( function() {
+    playComputer = true;
+    player1 = new Player($("input#player1").val());
+    player2 = new Player("Hal the Bot");
+    $("span#player1name").text(player1.name);
+    $("span#player2name").text(player2.name);
+    $("div#modalOverlay").hide();
+    switchPlayer(getRandomPlayer(player1, player2));
+
+    // if player2 (the bot) is chosen, roll
+    rollIfBot();
   });
 
 
   // handles clicking 'hold' to end turn and add score to total score
   $("span.holdButton").click(function() {
+    // player1 clicked the 'hold' button
     if (this.id === "player1hold") {
-      whoseTurn(player2);
+      switchPlayer(player2);
+      rollIfBot();
     } else {
-      whoseTurn(player1);
+      switchPlayer(player1);
     }
   });
 
